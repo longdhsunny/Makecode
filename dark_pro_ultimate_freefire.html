@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dark Pro Ultimate — Free Fire & General Templates</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <div class="panel">
+    <div class="header">
+      <div>
+        <div class="title">Dark Pro Ultimate — Free Fire + General</div>
+        <div class="subtitle">Chọn dạng code — đã gom thành nhóm chung & Free Fire chuyên dụng</div>
+      </div>
+      <div class="small">Offline · Stable</div>
+    </div>
+
+    <label>Tên file (vd. MyModule.xml)</label>
+    <input id="fileName" placeholder="MyModule.xml">
+
+    <label>Chọn dạng code</label>
+    <select id="codeType">
+      <optgroup label="— Chung —">
+        <option value="xml">XML</option>
+        <option value="ini">INI</option>
+        <option value="json">JSON</option>
+        <option value="yaml">YAML</option>
+        <option value="cpp">C++</option>
+        <option value="cs">C#</option>
+        <option value="js">JavaScript</option>
+        <option value="py">Python</option>
+        <option value="lua">Lua</option>
+        <option value="html">HTML/CSS</option>
+        <option value="php">PHP</option>
+        <option value="sh">Shell (.sh)</option>
+        <option value="bat">Batch (.bat)</option>
+      </optgroup>
+      <optgroup label="— Free Fire chuyên dụng —">
+        <option value="ff_ini">FF Sensitivity (.ini)</option>
+        <option value="ff_xml">FF Control Layout (.xml)</option>
+        <option value="ff_plist">FF DPI/Profile (.plist)</option>
+        <option value="ff_lua">FF Macro (.lua)</option>
+        <option value="ff_json">FF Resource (.json)</option>
+        <option value="ff_mobileconfig">FF MobileConfig (.mobileconfig)</option>
+      </optgroup>
+      <optgroup label="— Khác —">
+        <option value="custom">Custom (dán mã hoặc mô tả)</option>
+      </optgroup>
+    </select>
+
+    <label>Mẫu (template)</label>
+    <select id="template">
+      <option value="settings">Settings / config</option>
+      <option value="controls">Controls mapping</option>
+      <option value="profiles">Profiles / presets</option>
+      <option value="logger">Logger helper</option>
+      <option value="utility">Utility / helpers</option>
+      <option value="custom">Custom</option>
+    </select>
+
+    <label>Thông số (key=value mỗi dòng)</label>
+    <textarea id="kv" placeholder="profile=default
+sensitivity=0.78
+fov=90
+dpi=480"></textarea>
+
+    <label>Mô tả yêu cầu (Advanced) — ví dụ: 'function parseInput(a,b)' hoặc 'parse json and log'</label>
+    <textarea id="description" placeholder="Mô tả chi tiết để tool sinh code phù hợp"></textarea>
+
+    <label>Dán mã custom (nếu chọn Custom)</label>
+    <textarea id="custom" placeholder="// Dán mã ở đây"></textarea>
+
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <div style="flex:1">
+        <label>Số dòng random thêm</label>
+        <input id="randomLines" type="number" min="0" value="4">
+      </div>
+      <div style="width:160px">
+        <label>Kích thước mục tiêu (KB)</label>
+        <input id="sizeKB" type="number" min="0" placeholder="0">
+      </div>
+    </div>
+
+    <div style="margin-top:10px; display:flex; gap:8px; align-items:center">
+      <label class="small"><input id="autoDownload" type="checkbox" style="margin-right:8px">Auto-download</label>
+      <label class="small"><input id="saveLocal" type="checkbox" style="margin-right:8px" checked>Save local</label>
+      <label class="small"><input id="fullscreenOpt" type="checkbox" style="margin-right:8px">Enable fullscreen editor</label>
+    </div>
+
+    <div class="controls">
+      
+<label for="lines">Số dòng:</label>
+<input type="number" id="lines" min="1" max="10000" value="10" oninput="convertLinesToSize()">
+<label for="filesize">Dung lượng (KB):</label>
+<input type="number" id="filesize" min="1" max="10240" value="" oninput="convertSizeToLines()">
+<div id="conversionInfo" style="font-size: 0.9em; color: #ccc; margin-bottom: 10px;"></div>
+<button class="btn" id="generateBtn">Sinh & Hiển thị</button>
+
+      <button class="btn ghost" id="applyBtn">Áp dụng chỉnh sửa</button>
+      <button class="btn ghost" id="downloadBtn">Tải 1 file</button>
+      <button class="btn ghost" id="multiDownloadBtn">Tải nhiều file</button>
+      <button class="btn ghost" id="copyBtn">Sao chép</button>
+    </div>
+
+    <div class="saved-list" id="savedList"></div>
+    <div class="footer">Ghi chú: Free Fire templates chỉ là file cấu hình/hỗ trợ hợp pháp (sensitivity/layout). Nếu muốn ZIP, bật yêu cầu.</div>
+  </div>
+
+  <div class="panel">
+    <div style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Preview</strong><div class="subtitle" id="previewInfo">Chưa có nội dung</div></div>
+      <div class="subtitle" id="metaInfo">0 KB</div>
+    </div>
+
+    <div class="preview" id="preview"><pre id="codeOut">// Nhấn "Sinh & Hiển thị" để xem code</pre></div>
+    <div style="margin-top:10px">
+      <a id="directDownloadLink" href="#" download="" style="display:none; color:#34d1ff; font-weight:bold;">⬇ Tải code trực tiếp</a>
+    </div>
+
+    <div style="margin-top:12px">
+      <label>Editor (sửa xong bấm Áp dụng)</label>
+      <textarea id="editor" placeholder="// Chỉnh sửa mã ở đây"></textarea>
+      <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px">
+        <button class="btn ghost" id="fullscreenBtn">Toàn màn hình</button>
+        <button class="btn" id="updatePreviewBtn">Cập nhật preview</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen modal -->
+<div id="fs" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; padding:20px; box-sizing:border-box">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+    <div style="font-weight:700">Fullscreen Editor</div>
+    <div style="display:flex; gap:8px">
+      <button class="btn ghost" id="fsClose">Đóng</button>
+      <button class="btn" id="fsSave">Áp dụng & Đóng</button>
+    </div>
+  </div>
+  <textarea id="fsEditor" style="width:100%; height:80vh; border-radius:8px; padding:12px; font-family:ui-monospace; font-size:14px"></textarea>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
